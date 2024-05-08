@@ -15,22 +15,40 @@ using namespace std;
 #define S second
 #define endl "\n"
 
-#define ONLINE_JUDGE
+// #define ONLINE_JUDGE
 
+const ll N{(ll)1e5};
+
+int primes[N]{};
+void sieve(const int n) {
+    vector<bool> isP(sqrt(n), true);
+    isP[0] = false;
+    isP[1] = false;
+    for (int i{ 2 }; i * i < n; i++) {
+        if(isP[i]){
+            for (int j{ 2 * i }; j * j < n; j += i){
+                isP[j] = false;
+            }
+        }
+    }
+
+    ll j{};
+    for(ll i{}; i * i < n; i++)
+        if(isP[i]) primes[j++] = i;
+}
 
 void solve() {
     ll n, ans = 1;
     cin >> n;
     ll a[n], dp[n];
-    vi p(100000, -1);
-    int primes[] = {2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97, 101, 103, 107, 109, 113, 127, 131, 137, 139, 149, 151, 157, 163, 167, 173, 179, 181, 191, 193, 197, 199, 211, 223, 227, 229, 233, 239, 241, 251, 257, 263, 269, 271, 277, 281, 283, 293, 307, 311, 313, 317};
-
+    int p[100000];
+    memset(p, -1, sizeof p);
     FOR(i,0,n) cin >> a[i], dp[i] = 1;
     bool pr = false;
     FOR(i,0,n){
         pr = false;
         EACH(e, primes){
-            if (e > a[i]) break;
+            if (e > a[i] or e == 0) break;
             if (a[i]%e==0 and a[i]!=e) {
                 int other = a[i]/e;
                 if (p[e]!=-1) dp[i] = max(dp[i], dp[p[e]]+1);
@@ -57,6 +75,8 @@ int main() {
     #endif
     ll t = 1;
     // cin >> t;
+    sieve(100000);
     while (t--) solve();
+
     return 0;
 }
